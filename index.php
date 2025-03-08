@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php'; // Kết nối cơ sở dữ liệu
+require 'config/db.php'; // Kết nối cơ sở dữ liệu
 
 // Kiểm tra nếu người dùng đã đăng nhập
 if (isset($_SESSION['user']) || isset($_COOKIE['username'])) {
@@ -154,6 +154,14 @@ if (isset($_SESSION['user']) || isset($_COOKIE['username'])) {
         <h2>Chào mừng, <?php echo htmlspecialchars($username); ?>!</h2>
         <p>Đây là trang chính của bạn.</p>
         <a href="login.php?logout=true">Đăng xuất</a>
+        <br><br>
+        <a href="views/exam/index.php">Danh sách đề thi</a>
+        <br><br>
+        <a href="views/exam/create.php">Tạo đề thi mới</a>
+        <br><br>
+        <a href="views/user/profile.php">Thông tin cá nhân</a>
+        <br><br>
+        <a href="views/user/update_password.php">Cập nhật mật khẩu</a>
     </div>
 </body>
 </html>

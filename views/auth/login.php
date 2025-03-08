@@ -1,98 +1,3 @@
-<?php
-session_start();
-require 'config/db.php'; // Kết nối cơ sở dữ liệu
-
-// Specify the error log file location
-ini_set('error_log', 'c:/xampp/htdocs/Web_on_thi_trac_phiem_php/php_errors.log');
-
-// Xử lý đăng xuất
-if (isset($_GET['logout'])) {
-    setcookie("username", "", time() - 3600, "/"); // Xóa cookie
-    setcookie("password", "", time() - 3600, "/");
-    session_destroy(); // Hủy phiên
-    header("Location: index.php");
-    exit();
-}
-
-// Xử lý đăng nhập
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $remember = isset($_POST['remember']);
-    
-    // Kiểm tra tên đăng nhập từ cơ sở dữ liệu
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->store_result();
-    
-    if ($stmt->num_rows > 0) {
-        $stmt->bind_result($user_id, $hashed_password);
-        $stmt->fetch();
-        
-        // Log the hashed password and plain text password
-        error_log("Hashed password from DB: " . $hashed_password);
-        error_log("Plain text password entered: " . $password);
-        
-        if (password_verify($password, $hashed_password)) {
-            $_SESSION['user'] = $username;
-            $_SESSION['user_id'] = $user_id;
-            
-            if ($remember) {
-                // Nếu chọn "Ghi nhớ đăng nhập", lưu cookie
-                setcookie("username", $username, time() + (86400 * 30), "/"); // 30 ngày
-                setcookie("password", $password, time() + (86400 * 30), "/");
-            } else {
-                // Nếu không chọn, xóa cookie (nếu có từ trước)
-                setcookie("username", "", time() - 3600, "/");
-                setcookie("password", "", time() - 3600, "/");
-            }
-            
-            header("Location: index.php");
-            exit();
-        } else {
-            // Log the password verification failure
-            error_log("Password verification failed for user: " . $username);
-            error_log("password_verify result: " . (password_verify($password, $hashed_password) ? 'true' : 'false'));
-            $error = "Mật khẩu không đúng!";
-        }
-    } else {
-        $error = "Tên đăng nhập không tồn tại!";
-    }
-    $stmt->close();
-}
-
-// Kiểm tra trạng thái đăng nhập
-if (isset($_COOKIE['username']) && !isset($_SESSION['user'])) {
-    // Nếu có cookie mà không có session, tự động đăng nhập lại
-    $username = $_COOKIE['username'];
-    $password = $_COOKIE['password'];
-    
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->store_result();
-    
-    if ($stmt->num_rows > 0) {
-        $stmt->bind_result($user_id, $hashed_password);
-        $stmt->fetch();
-        
-        if (password_verify($password, $hashed_password)) {
-            $_SESSION['user'] = $username;
-            $_SESSION['user_id'] = $user_id;
-        }
-    }
-    $stmt->close();
-}
-
-// Nếu đã đăng nhập qua session, hiển thị thông tin
-if (isset($_SESSION['user'])) {
-    echo "<p>Chào, " . htmlspecialchars($_SESSION['user']) . "</p>";
-    echo "<a href='?logout=true'>Đăng xuất</a>";
-    exit();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -281,7 +186,6 @@ if (isset($_SESSION['user'])) {
             
             <button type="submit">Đăng nhập</button>
         </form>
-        <p>Chưa có tài khoản? <a href="views/auth/register.php">Đăng ký</a></p>
     </div>
 </body>
 </html>
