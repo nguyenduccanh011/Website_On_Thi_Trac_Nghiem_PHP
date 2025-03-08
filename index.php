@@ -1,5 +1,6 @@
 <?php
 session_start();
+require 'db.php'; // Kết nối cơ sở dữ liệu
 
 // Kiểm tra nếu người dùng đã đăng nhập
 if (isset($_SESSION['user']) || isset($_COOKIE['username'])) {
