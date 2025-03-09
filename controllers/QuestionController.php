@@ -8,6 +8,9 @@ class QuestionController {
 
     public function createQuestion($exam_id, $content, $options, $correct_option) {
         $stmt = $this->conn->prepare("INSERT INTO questions (exam_id, content, options, correct_option) VALUES (?, ?, ?, ?)");
+        if ($stmt === false) {
+            return "Lỗi: " . $this->conn->error;
+        }
         $stmt->bind_param("isss", $exam_id, $content, $options, $correct_option);
         if ($stmt->execute()) {
             return "Câu hỏi đã được tạo thành công.";
