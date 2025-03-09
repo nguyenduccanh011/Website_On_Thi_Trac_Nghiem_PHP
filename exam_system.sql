@@ -193,14 +193,7 @@ ALTER TABLE `exam_questions`
 --
 ALTER TABLE `questions`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `exam_id` (`exam_id`);
-
---
--- Chỉ mục cho bảng `answers`
---
-ALTER TABLE `answers`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `question_id` (`question_id`);
+  ADD KEY `category_id` (`category_id`);
 
 --
 -- Chỉ mục cho bảng `results`
@@ -247,12 +240,6 @@ ALTER TABLE `questions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT cho bảng `answers`
---
-ALTER TABLE `answers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT cho bảng `results`
 --
 ALTER TABLE `results`
@@ -285,13 +272,7 @@ ALTER TABLE `exam_questions`
 -- Các ràng buộc cho bảng `questions`
 --
 ALTER TABLE `questions`
-  ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`exam_id`) REFERENCES `exams` (`id`);
-
---
--- Các ràng buộc cho bảng `answers`
---
-ALTER TABLE `answers`
-  ADD CONSTRAINT `answers_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`);
+  ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
 
 --
 -- Các ràng buộc cho bảng `results`
