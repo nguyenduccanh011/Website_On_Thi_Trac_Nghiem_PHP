@@ -12,7 +12,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $subject = $_POST['subject'];
 
     $message = $examController->createExam($title, $description, $duration, $total_marks, $subject);
-    echo "<p>$message</p>";
+    if ($message === "Exam created successfully") {
+        echo "<p>$message</p>";
+    } else {
+        echo "<p>Error: $message</p>";
+    }
 }
 
 $conn->close();
