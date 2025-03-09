@@ -67,7 +67,8 @@
         }
 
         form input[type="text"],
-        form textarea {
+        form textarea,
+        form input[type="number"] {
             width: 100%;
             padding: 12px 15px;
             margin-bottom: 20px;
@@ -80,7 +81,8 @@
         }
 
         form input[type="text"]:focus,
-        form textarea:focus {
+        form textarea:focus,
+        form input[type="number"]:focus {
             outline: none;
             background: rgba(255, 255, 255, 0.3);
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
@@ -152,7 +154,8 @@
                 font-size: 0.85em;
             }
             form input[type="text"],
-            form textarea {
+            form textarea,
+            form input[type="number"] {
                 font-size: 0.9em;
             }
             button {
@@ -170,6 +173,16 @@
             
             <label for="description">Mô tả:</label>
             <textarea id="description" name="description" required></textarea>
+            
+            <!-- New fields for detailed exam creation -->
+            <label for="duration">Thời gian (phút):</label>
+            <input type="number" id="duration" name="duration" required>
+            
+            <label for="total_marks">Tổng điểm:</label>
+            <input type="number" id="total_marks" name="total_marks" required>
+            
+            <label for="subject">Môn học:</label>
+            <input type="text" id="subject" name="subject" required>
             
             <button type="submit">Tạo đề thi</button>
         </form>

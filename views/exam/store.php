@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $exam_id = $conn->insert_id;
         header("Location: ../question/create.php?exam_id=$exam_id");
         exit();
-    } else {
+    }else{
         echo "<p>Error: $message</p>";
     }
 }
