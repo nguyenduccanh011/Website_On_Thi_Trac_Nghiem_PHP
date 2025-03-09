@@ -43,6 +43,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
         echo "<p>Đề thi và tất cả câu hỏi đã được tạo thành công.</p>";
+        header("Location: index.php"); // Redirect to exam list page
+        exit();
     } else {
         echo "<p>Error: $message</p>";
     }
