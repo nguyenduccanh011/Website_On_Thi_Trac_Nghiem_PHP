@@ -19,8 +19,8 @@
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
-            overflow: hidden;
-            position: relative;
+            overflow: auto; /* Allow scrolling */
+            padding: 20px;
         }
 
         /* Container chính */
@@ -30,7 +30,7 @@
             border-radius: 20px;
             padding: 50px;
             width: 100%;
-            max-width: 600px;
+            max-width: 1200px; /* Increase max-width */
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
             text-align: center;
             animation: slideUp 0.8s ease-out;
@@ -57,12 +57,23 @@
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
         .exam-item {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 20px;
-            margin-bottom: 20px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .exam-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
         }
 
         .exam-item h3 {
@@ -156,28 +167,30 @@
     <div class="exam-container">
         <h2>Danh sách đề thi</h2>
         <a href="../../login.php?logout=true">Đăng xuất</a>
-        <?php
-        require '../../config/db.php';
-        require '../../models/Exam.php';
-        require '../../controllers/ExamController.php';
+        <div class="exam-grid">
+            <?php
+            require '../../config/db.php';
+            require '../../models/Exam.php';
+            require '../../controllers/ExamController.php';
 
-        $examController = new ExamController($conn);
-        $result = $conn->query("SELECT * FROM exams");
+            $examController = new ExamController($conn);
+            $result = $conn->query("SELECT * FROM exams");
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $exam = new Exam($row['id'], $row['title'], $row['description']);
-                echo "<div class='exam-item'>";
-                echo "<h3><a href='show.php?id=" . $exam->id . "'>" . htmlspecialchars($exam->title) . "</a></h3>";
-                echo "<p>" . htmlspecialchars($exam->description) . "</p>";
-                echo "</div>";
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $exam = new Exam($row['id'], $row['title'], $row['description']);
+                    echo "<div class='exam-item'>";
+                    echo "<h3><a href='show.php?id=" . $exam->id . "'>" . htmlspecialchars($exam->title) . "</a></h3>";
+                    echo "<p>" . htmlspecialchars($exam->description) . "</p>";
+                    echo "</div>";
+                }
+            } else {
+                echo "<p>Không có đề thi nào.</p>";
             }
-        } else {
-            echo "<p>Không có đề thi nào.</p>";
-        }
 
-        $conn->close();
-        ?>
+            $conn->close();
+            ?>
+        </div>
     </div>
 </body>
 </html>

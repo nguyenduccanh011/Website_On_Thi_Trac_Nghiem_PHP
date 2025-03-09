@@ -19,8 +19,8 @@
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
-            overflow: hidden;
-            position: relative;
+            overflow-y: auto; /* Allow vertical scrolling */
+            padding: 20px;
         }
 
         /* Container chính */
@@ -28,9 +28,9 @@
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(12px);
             border-radius: 20px;
-            padding: 50px;
+            padding: 30px;
             width: 100%;
-            max-width: 600px;
+            max-width: 1200px; /* Increase max-width */
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
             text-align: center;
             animation: slideUp 0.8s ease-out;
@@ -50,7 +50,7 @@
 
         h2 {
             color: #fff;
-            font-size: 2.2em;
+            font-size: 2em;
             margin-bottom: 20px;
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -89,6 +89,21 @@
             margin-bottom: 10px;
         }
 
+        .answer-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .answer-option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .answer-option label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
         /* Nút quay lại */
         a {
             display: inline-block;
@@ -99,7 +114,7 @@
             border-radius: 10px;
             font-size: 1em;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -167,7 +182,7 @@
         }
     </style>
 </head>
-<body></body></body>
+<body>
     <div class="exam-container">
         <h2>Chi tiết đề thi</h2>
         <?php
@@ -194,7 +209,15 @@
                     $question = new Question($questionRow['id'], $questionRow['exam_id'], $questionRow['content'], $questionRow['options'], $questionRow['correct_option']);
                     echo "<div class='question-item'>";
                     echo "<h4>" . htmlspecialchars($question->content) . "</h4>";
-                    echo "<p>" . htmlspecialchars($question->options) . "</p>";
+                    $options = explode(',', $question->options);
+                    foreach ($options as $index => $option) {
+                        $optionLabel = chr(65 + $index); // Convert index to A, B, C, D...
+                        echo "<div class='answer-option'>";
+                        echo "<input type='radio' name='question_" . $question->id . "' value='" . htmlspecialchars($option) . "' disabled>";
+                        echo "<label>" . $optionLabel . "</label>";
+                        echo "<p>" . htmlspecialchars($option) . "</p>";
+                        echo "</div>";
+                    }
                     echo "<p>Lựa chọn đúng: " . htmlspecialchars($question->correct_option) . "</p>";
                     echo "</div>";
                 }
