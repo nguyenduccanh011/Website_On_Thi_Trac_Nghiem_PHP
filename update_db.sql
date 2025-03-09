@@ -11,6 +11,22 @@ CREATE TABLE IF NOT EXISTS `questions` (
   CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`exam_id`) REFERENCES `exams` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- Thêm cột `exam_id` vào bảng `questions` nếu chưa tồn tại
+ALTER TABLE `questions`
+  ADD COLUMN IF NOT EXISTS `exam_id` int(11) NOT NULL;
+
+-- Thêm cột `content` vào bảng `questions` nếu chưa tồn tại
+ALTER TABLE `questions`
+  ADD COLUMN IF NOT EXISTS `content` text NOT NULL;
+
+-- Thêm cột `options` vào bảng `questions` nếu chưa tồn tại
+ALTER TABLE `questions`
+  ADD COLUMN IF NOT EXISTS `options` text NOT NULL;
+
+-- Thêm cột `correct_option` vào bảng `questions` nếu chưa tồn tại
+ALTER TABLE `questions`
+  ADD COLUMN IF NOT EXISTS `correct_option` varchar(255) NOT NULL;
+
 -- Tạo bảng `answers` nếu chưa tồn tại
 CREATE TABLE IF NOT EXISTS `answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
