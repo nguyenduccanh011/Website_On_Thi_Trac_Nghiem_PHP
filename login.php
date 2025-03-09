@@ -21,13 +21,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $remember = isset($_POST['remember']);
     
     // Kiểm tra tên đăng nhập từ cơ sở dữ liệu
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT id, password, name, position FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
     
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($user_id, $hashed_password);
+        $stmt->bind_result($user_id, $hashed_password, $name, $position);
         $stmt->fetch();
         
         // Log the hashed password and plain text password
@@ -37,6 +37,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $hashed_password)) {
             $_SESSION['user'] = $username;
             $_SESSION['user_id'] = $user_id;
+            $_SESSION['name'] = $name;
+            $_SESSION['position'] = $position;
             
             if ($remember) {
                 // Nếu chọn "Ghi nhớ đăng nhập", lưu cookie
@@ -90,7 +92,7 @@ if (isset($_COOKIE['username']) && !isset($_SESSION['user'])) {
 
 // Nếu đã đăng nhập qua session, hiển thị thông tin
 if (isset($_SESSION['user'])) {
-    echo "<p>Chào, " . htmlspecialchars($_SESSION['user']) . "</p>";
+    echo "<p>Chào, " . htmlspecialchars($_SESSION['name']) . " (" . htmlspecialchars($_SESSION['position']) . ")</p>";
     echo "<a href='?logout=true'>Đăng xuất</a>";
     exit();
 }
