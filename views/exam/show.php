@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách đề thi</title>
+    <title>Chi tiết đề thi</title>
     <style>
         /* Reset mặc định */
         * {
@@ -57,7 +57,19 @@
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
-        .exam-item {
+        h3 {
+            color: #fff;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #e0e0e0;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .question-item {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 20px;
@@ -65,19 +77,19 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .exam-item h3 {
+        .question-item h4 {
             color: #fff;
             font-size: 1.5em;
             margin-bottom: 10px;
         }
 
-        .exam-item p {
+        .question-item p {
             color: #e0e0e0;
             font-size: 1em;
             margin-bottom: 10px;
         }
 
-        /* Nút đăng xuất */
+        /* Nút quay lại */
         a {
             display: inline-block;
             padding: 12px 25px;
@@ -139,10 +151,13 @@
             h2 {
                 font-size: 1.8em;
             }
-            .exam-item h3 {
+            h3 {
+                font-size: 1.5em;
+            }
+            .question-item h4 {
                 font-size: 1.2em;
             }
-            .exam-item p {
+            .question-item p {
                 font-size: 0.9em;
             }
             a {
@@ -152,32 +167,47 @@
         }
     </style>
 </head>
-<body>
+<body></body></body>
     <div class="exam-container">
-        <h2>Danh sách đề thi</h2>
-        <a href="../../login.php?logout=true">Đăng xuất</a>
+        <h2>Chi tiết đề thi</h2>
         <?php
         require '../../config/db.php';
         require '../../models/Exam.php';
+        require '../../models/Question.php';
         require '../../controllers/ExamController.php';
+        require '../../controllers/QuestionController.php';
 
         $examController = new ExamController($conn);
-        $result = $conn->query("SELECT * FROM exams");
+        $questionController = new QuestionController($conn);
+        $id = $_GET['id'];
+        $result = $conn->query("SELECT * FROM exams WHERE id = $id");
 
         if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $exam = new Exam($row['id'], $row['title'], $row['description']);
-                echo "<div class='exam-item'>";
-                echo "<h3><a href='show.php?id=" . $exam->id . "'>" . htmlspecialchars($exam->title) . "</a></h3>";
-                echo "<p>" . htmlspecialchars($exam->description) . "</p>";
-                echo "</div>";
+            $row = $result->fetch_assoc();
+            $exam = new Exam($row['id'], $row['title'], $row['description']);
+            echo "<h3>" . htmlspecialchars($exam->title) . "</h3>";
+            echo "<p>" . htmlspecialchars($exam->description) . "</p>";
+
+            $questions = $conn->query("SELECT * FROM questions WHERE exam_id = $id");
+            if ($questions->num_rows > 0) {
+                while ($questionRow = $questions->fetch_assoc()) {
+                    $question = new Question($questionRow['id'], $questionRow['exam_id'], $questionRow['content'], $questionRow['options'], $questionRow['correct_option']);
+                    echo "<div class='question-item'>";
+                    echo "<h4>" . htmlspecialchars($question->content) . "</h4>";
+                    echo "<p>" . htmlspecialchars($question->options) . "</p>";
+                    echo "<p>Lựa chọn đúng: " . htmlspecialchars($question->correct_option) . "</p>";
+                    echo "</div>";
+                }
+            } else {
+                echo "<p>Không có câu hỏi nào.</p>";
             }
         } else {
-            echo "<p>Không có đề thi nào.</p>";
+            echo "<p>Đề thi không tồn tại.</p>";
         }
 
         $conn->close();
         ?>
+        <a href="index.php">Quay lại danh sách đề thi</a>
     </div>
 </body>
 </html>
