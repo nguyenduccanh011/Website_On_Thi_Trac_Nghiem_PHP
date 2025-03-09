@@ -18,20 +18,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            overflow: hidden;
-            position: relative;
+            background: #f0f0f0;
+            overflow-y: auto; /* Allow vertical scrolling */
+            padding: 20px;
         }
 
         /* Container chính */
         .question-container {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
+            background: #fff;
             border-radius: 20px;
-            padding: 50px;
+            padding: 30px;
             width: 100%;
-            max-width: 500px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            max-width: 800px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             text-align: center;
             animation: slideUp 0.8s ease-out;
         }
@@ -49,21 +48,21 @@
         }
 
         h2 {
-            color: #fff;
-            font-size: 2.2em;
+            color: #333;
+            font-size: 2em;
             margin-bottom: 20px;
             letter-spacing: 1px;
             text-transform: uppercase;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         /* Label và input */
         form label {
-            color: #fff;
+            color: #333;
             font-size: 0.95em;
             margin-bottom: 8px;
             display: block;
             font-weight: 500;
+            text-align: left;
         }
 
         form input[type="text"],
@@ -71,10 +70,10 @@
             width: 100%;
             padding: 12px 15px;
             margin-bottom: 20px;
-            border: none;
+            border: 1px solid #ccc;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
+            background: #f9f9f9;
+            color: #333;
             font-size: 1em;
             transition: all 0.3s ease;
         }
@@ -82,13 +81,19 @@
         form input[type="text"]:focus,
         form textarea:focus {
             outline: none;
-            background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         /* Nút tạo câu hỏi */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
         button {
-            width: 100%;
+            flex: 1;
             padding: 12px;
             border: none;
             border-radius: 10px;
@@ -119,7 +124,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
             animation: pulse 12s infinite;
             z-index: -1;
         }
@@ -142,7 +147,7 @@
         /* Responsive */
         @media (max-width: 480px) {
             .question-container {
-                padding: 30px;
+                padding: 20px;
                 margin: 20px;
             }
             h2 {
@@ -164,24 +169,36 @@
 <body>
     <div class="question-container">
         <h2>Tạo câu hỏi mới</h2>
-        <form method="post" action="store.php">
-            <label for="exam_id">ID Đề thi:</label>
-            <input type="text" id="exam_id" name="exam_id" value="<?php echo $_GET['exam_id'] ?? ''; ?>" required>
-            
-            <label for="content">Nội dung câu hỏi:</label>
-            <textarea id="content" name="content" required></textarea>
-            
-            <label for="options">Các lựa chọn (ngăn cách bằng dấu phẩy):</label>
-            <textarea id="options" name="options" required></textarea>
-            
-            <label for="correct_option">Lựa chọn đúng:</label>
-            <input type="text" id="correct_option" name="correct_option" required>
-            
-            <label for="answers">Đáp án (ngăn cách bằng dấu phẩy):</label>
-            <textarea id="answers" name="answers" required></textarea>
-            
-            <button type="submit">Tạo câu hỏi</button>
+        <form method="post" action="store.php" id="questionForm">
+            <div id="questions">
+                <div class="question-block">
+                    <label for="exam_id">ID Đề thi:</label>
+                    <input type="text" id="exam_id" name="exam_id[]" value="<?php echo $_GET['exam_id'] ?? ''; ?>" required>
+                    
+                    <label for="content">Nội dung câu hỏi:</label>
+                    <textarea id="content" name="content[]" required></textarea>
+                    
+                    <label for="options">Các lựa chọn (ngăn cách bằng dấu phẩy):</label>
+                    <textarea id="options" name="options[]" required></textarea>
+                    
+                    <label for="correct_option">Lựa chọn đúng:</label>
+                    <input type="text" id="correct_option" name="correct_option[]" required>
+                    
+                    <label for="answers">Đáp án (ngăn cách bằng dấu phẩy):</label>
+                    <textarea id="answers" name="answers[]" required></textarea>
+                </div>
+            </div>
+            <div class="button-container">
+                <button type="button" onclick="addQuestion()">Thêm câu hỏi</button>
+                <button type="submit">Tạo câu hỏi</button>
+            </div>
         </form>
     </div>
+    <script>
+        function addQuestion() {
+            const questionBlock = document.querySelector('.question-block').cloneNode(true);
+            document.getElementById('questions').appendChild(questionBlock);
+        }
+    </script>
 </body>
 </html>

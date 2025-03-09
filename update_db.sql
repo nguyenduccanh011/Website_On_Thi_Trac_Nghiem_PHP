@@ -43,3 +43,13 @@ CREATE TABLE IF NOT EXISTS `answers` (
 ALTER TABLE `users`
   ADD COLUMN IF NOT EXISTS `name` varchar(255) DEFAULT NULL,
   ADD COLUMN IF NOT EXISTS `position` varchar(255) DEFAULT NULL;
+
+-- Tạo bảng `exam_questions` nếu chưa tồn tại
+CREATE TABLE IF NOT EXISTS `exam_questions` (
+  `exam_id` int(11) NOT NULL,
+  `question_id` int(11) NOT NULL,
+  PRIMARY KEY (`exam_id`, `question_id`),
+  KEY `question_id` (`question_id`),
+  CONSTRAINT `exam_questions_ibfk_1` FOREIGN KEY (`exam_id`) REFERENCES `exams` (`id`),
+  CONSTRAINT `exam_questions_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

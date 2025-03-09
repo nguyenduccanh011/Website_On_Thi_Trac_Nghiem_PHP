@@ -188,7 +188,7 @@
             echo "<h3>" . htmlspecialchars($exam->title) . "</h3>";
             echo "<p>" . htmlspecialchars($exam->description) . "</p>";
 
-            $questions = $conn->query("SELECT * FROM questions WHERE exam_id = $id");
+            $questions = $conn->query("SELECT q.* FROM questions q JOIN exam_questions eq ON q.id = eq.question_id WHERE eq.exam_id = $id");
             if ($questions->num_rows > 0) {
                 while ($questionRow = $questions->fetch_assoc()) {
                     $question = new Question($questionRow['id'], $questionRow['exam_id'], $questionRow['content'], $questionRow['options'], $questionRow['correct_option']);

@@ -88,7 +88,9 @@ INSERT INTO `exams` (`id`, `name`, `created_at`, `title`, `description`, `durati
 
 CREATE TABLE `exam_questions` (
   `exam_id` int(11) NOT NULL,
-  `question_id` int(11) NOT NULL
+  `question_id` int(11) NOT NULL,
+  PRIMARY KEY (`exam_id`, `question_id`),
+  KEY `question_id` (`question_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
