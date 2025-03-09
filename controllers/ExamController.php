@@ -6,9 +6,9 @@ class ExamController {
         $this->conn = $conn;
     }
 
-    public function createExam($title, $description) {
-        $stmt = $this->conn->prepare("INSERT INTO exams (title, description) VALUES (?, ?)");
-        $stmt->bind_param("ss", $title, $description);
+    public function createExam($title, $description, $duration, $total_marks, $subject) {
+        $stmt = $this->conn->prepare("INSERT INTO exams (title, description, duration, total_marks, subject) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssdis", $title, $description, $duration, $total_marks, $subject);
         if ($stmt->execute()) {
             return "Đề thi đã được tạo thành công.";
         } else {
