@@ -48,6 +48,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 setcookie("password", "", time() - 3600, "/");
             }
             
+            // Log successful login
+            error_log("Login successful for user: " . $username);
+            
             header("Location: index.php");
             exit();
         } else {

@@ -1,3 +1,103 @@
+<?php
+session_start();
+require '../../config/db.php'; // Kết nối cơ sở dữ liệu
+
+// Specify the error log file location
+ini_set('error_log', 'c:/xampp/htdocs/Web_on_thi_trac_phiem_php/php_errors.log');
+
+// Xử lý đăng xuất
+if (isset($_GET['logout'])) {
+    setcookie("username", "", time() - 3600, "/"); // Xóa cookie
+    setcookie("password", "", time() - 3600, "/");
+    session_destroy(); // Hủy phiên
+    header("Location: login.php");
+    exit();
+}
+
+// Xử lý đăng nhập
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $remember = isset($_POST['remember']);
+    
+    // Kiểm tra tên đăng nhập từ cơ sở dữ liệu
+    $stmt = $conn->prepare("SELECT id, password, name, position FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
+    
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($user_id, $hashed_password, $name, $position);
+        $stmt->fetch();
+        
+        // Log the hashed password and plain text password
+        error_log("Hashed password from DB: " . $hashed_password);
+        error_log("Plain text password entered: " . $password);
+        
+        if (password_verify($password, $hashed_password)) {
+            $_SESSION['user'] = $username;
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['name'] = $name;
+            $_SESSION['position'] = $position;
+            
+            if ($remember) {
+                // Nếu chọn "Ghi nhớ đăng nhập", lưu cookie
+                setcookie("username", $username, time() + (86400 * 30), "/"); // 30 ngày
+                setcookie("password", $password, time() + (86400 * 30), "/");
+            } else {
+                // Nếu không chọn, xóa cookie (nếu có từ trước)
+                setcookie("username", "", time() - 3600, "/");
+                setcookie("password", "", time() - 3600, "/");
+            }
+            
+            // Log successful login
+            error_log("Login successful for user: " . $username);
+            
+            header("Location: ../../index.php");
+            exit();
+        } else {
+            // Log the password verification failure
+            error_log("Password verification failed for user: " . $username);
+            error_log("password_verify result: " . (password_verify($password, $hashed_password) ? 'true' : 'false'));
+            $error = "Mật khẩu không đúng!";
+        }
+    } else {
+        $error = "Tên đăng nhập không tồn tại!";
+    }
+    $stmt->close();
+}
+
+// Kiểm tra trạng thái đăng nhập
+if (isset($_COOKIE['username']) && !isset($_SESSION['user'])) {
+    // Nếu có cookie mà không có session, tự động đăng nhập lại
+    $username = $_COOKIE['username'];
+    $password = $_COOKIE['password'];
+    
+    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
+    
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($user_id, $hashed_password);
+        $stmt->fetch();
+        
+        if (password_verify($password, $hashed_password)) {
+            $_SESSION['user'] = $username;
+            $_SESSION['user_id'] = $user_id;
+        }
+    }
+    $stmt->close();
+}
+
+// Nếu đã đăng nhập qua session, hiển thị thông tin
+if (isset($_SESSION['user'])) {
+    echo "<p>Chào, " . htmlspecialchars($_SESSION['name']) . " (" . htmlspecialchars($_SESSION['position']) . ")</p>";
+    echo "<a href='?logout=true'>Đăng xuất</a>";
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -179,6 +279,12 @@
             
             <label>Mật khẩu:</label>
             <input type="password" name="password" value="<?php echo $_COOKIE['password'] ?? ''; ?>" required>
+            
+            <label>Tên:</label>
+            <input type="text" name="name" value="<?php echo $_COOKIE['name'] ?? ''; ?>" required>
+            
+            <label>Chức vụ:</label>
+            <input type="text" name="position" value="<?php echo $_COOKIE['position'] ?? ''; ?>" required>
             
             <label>
                 <input type="checkbox" name="remember" <?php echo isset($_COOKIE['username']) ? 'checked' : ''; ?>> Ghi nhớ đăng nhập
