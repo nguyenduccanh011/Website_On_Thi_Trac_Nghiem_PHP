@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $subject = $_POST['subject'];
 
     $message = $examController->createExam($title, $description, $duration, $total_marks, $subject);
-    if ($message === "Exam created successfully") {
+    if (strpos($message, "thành công") !== false) {
         echo "<p>$message</p>";
     } else {
         echo "<p>Error: $message</p>";
