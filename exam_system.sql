@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th3 09, 2025 lúc 08:04 AM
+-- Thời gian đã tạo: Th3 09, 2025 lúc 05:09 PM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.0.28
 
@@ -88,9 +88,7 @@ INSERT INTO `exams` (`id`, `name`, `created_at`, `title`, `description`, `durati
 
 CREATE TABLE `exam_questions` (
   `exam_id` int(11) NOT NULL,
-  `question_id` int(11) NOT NULL,
-  PRIMARY KEY (`exam_id`, `question_id`),
-  KEY `question_id` (`question_id`)
+  `question_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
