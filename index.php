@@ -22,41 +22,8 @@ if (isset($_SESSION['user']) || isset($_COOKIE['username'])) {
 </head>
 <body>
     <div class="container">
-        <header class="top-nav">
-            <div class="logo">
-                <a href="/">QLTSGeek</a>
-            </div>
-
-            <div class="search-bar">
-                <i class="fas fa-search"></i> <input type="text" placeholder="Tìm kiếm bài kiểm tra, chủ đề...">
-            </div>
-
-            <div class="user-info">
-                <img src="https://photo.znews.vn/w1200/Uploaded/mdf_eioxrd/2021_07_06/1q.jpg" alt="Avatar" class="avatar">
-                <div class="user-details">
-                    <span><?php echo htmlspecialchars($username); ?></span>
-                    <span class="role">Student</span>
-                </div>
-                <div class="user-dropdown">
-                    <a href="views/user/profile.php"><i class="fas fa-user"></i> Hồ sơ</a>
-                    <a href="#"><i class="fas fa-cog"></i> Cài đặt</a>
-                    <a href="login.php?logout=true"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-                </div>
-            </div>
-        </header>
-
-        <aside class="sidebar">
-            <nav>
-                <ul>
-                    <li><a href="index.php"><i class="fas fa-tachometer-alt"></i> Trang chủ</a></li>
-                    <li><a href="views/exam/index.php"><i class="fas fa-book"></i> Danh sách đề thi</a></li>
-                    <li><a href="views/exam/create.php"><i class="fas fa-stethoscope"></i> Tạo đề thi mới</a></li>
-                    <li><a href="views/user/profile.php"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
-                    <li><a href="views/user/update_password.php"><i class="fas fa-key"></i> Cập nhật mật khẩu</a></li>
-                    <li><a href="login.php?logout=true"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
-                </ul>
-            </nav>
-        </aside>
+        <?php include 'template/header.php'; ?>
+        <?php include 'template/sidebar.php'; ?>
 
         <main class="content">
             <section>
