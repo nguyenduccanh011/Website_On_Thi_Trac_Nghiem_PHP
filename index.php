@@ -17,6 +17,8 @@ if (isset($_SESSION['user']) || isset($_COOKIE['username'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang chính</title>
+    <link rel="stylesheet" href="css/menu.css">
+    <script src="js/menu.js" defer></script>
     <style>
         /* Reset mặc định */
         * {
@@ -150,6 +152,16 @@ if (isset($_SESSION['user']) || isset($_COOKIE['username'])) {
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <ul class="navbar-menu">
+            <li><a href="index.php">Trang chính</a></li>
+            <li><a href="views/exam/index.php">Danh sách đề thi</a></li>
+            <li><a href="views/exam/create.php">Tạo đề thi mới</a></li>
+            <li><a href="views/user/profile.php">Thông tin cá nhân</a></li>
+            <li><a href="views/user/update_password.php">Cập nhật mật khẩu</a></li>
+            <li><a href="login.php?logout=true">Đăng xuất</a></li>
+        </ul>
+    </nav>
     <div class="main-container">
         <h2>Chào mừng, <?php echo htmlspecialchars($username); ?>!</h2>
         <p>Đây là trang chính của bạn.</p>

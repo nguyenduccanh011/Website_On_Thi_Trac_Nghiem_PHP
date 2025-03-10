@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danh sách đề thi</title>
+    <link rel="stylesheet" href="../../css/menu.css">
+    <script src="../../js/menu.js" defer></script>
     <style>
         /* Reset mặc định */
         * {
@@ -164,6 +166,16 @@
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <ul class="navbar-menu">
+            <li><a href="../../index.php">Trang chính</a></li>
+            <li><a href="index.php">Danh sách đề thi</a></li>
+            <li><a href="create.php">Tạo đề thi mới</a></li>
+            <li><a href="../user/profile.php">Thông tin cá nhân</a></li>
+            <li><a href="../user/update_password.php">Cập nhật mật khẩu</a></li>
+            <li><a href="../../login.php?logout=true">Đăng xuất</a></li>
+        </ul>
+    </nav>
     <div class="exam-container">
         <h2>Danh sách đề thi</h2>
         <a href="../../login.php?logout=true">Đăng xuất</a>
