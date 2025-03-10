@@ -1,177 +1,78 @@
+<?php
+session_start(); // Ensure session is started
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thông tin cá nhân</title>
-    <link rel="stylesheet" href="../../css/menu.css">
-    <script src="../../js/menu.js" defer></script>
-    <style>
-        /* Reset mặc định */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Container chính */
-        .profile-container {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 50px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-            text-align: center;
-            animation: slideUp 0.8s ease-out;
-        }
-
-        /* Hiệu ứng slide-up */
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h2 {
-            color: #fff;
-            font-size: 2.2em;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        p {
-            color: #e0e0e0;
-            font-size: 1.1em;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-
-        /* Nút đăng xuất */
-        a {
-            display: inline-block;
-            padding: 12px 25px;
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 10px;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.4);
-            background: linear-gradient(45deg, #ff8e8e, #ff6b6b);
-        }
-
-        a:active {
-            transform: translateY(0);
-        }
-
-        /* Hiệu ứng nền động */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
-            animation: pulse 12s infinite;
-            z-index: -1;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 0.4;
-            }
-            50% {
-                transform: scale(1.15);
-                opacity: 0.2;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 0.4;
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .profile-container {
-                padding: 30px;
-                margin: 20px;
-            }
-            h2 {
-                font-size: 1.8em;
-            }
-            p {
-                font-size: 1em;
-            }
-            a {
-                padding: 10px 20px;
-                font-size: 0.9em;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../../template/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <nav class="navbar">
-        <ul class="navbar-menu">
-            <li><a href="../../index.php">Trang chính</a></li>
-            <li><a href="../exam/index.php">Danh sách đề thi</a></li>
-            <li><a href="../exam/create.php">Tạo đề thi mới</a></li>
-            <li><a href="profile.php">Thông tin cá nhân</a></li>
-            <li><a href="update_password.php">Cập nhật mật khẩu</a></li>
-            <li><a href="../../login.php?logout=true">Đăng xuất</a></li>
-        </ul>
-    </nav>
-    <div class="profile-container">
-        <h2>Thông tin cá nhân</h2>
-        <?php
-        require '../../config/db.php';
-        require '../../controllers/UserController.php';
+    <div class="container">
+        <header class="top-nav">
+            <div class="logo">
+                <a href="/">QLTSGeek</a>
+            </div>
 
-        session_start();
-        $username = $_SESSION['user'];
-        $userController = new UserController($conn);
-        $userInfo = $userController->getUserInfo($username);
+            <div class="search-bar">
+                <i class="fas fa-search"></i> <input type="text" placeholder="Tìm kiếm bài kiểm tra, chủ đề...">
+            </div>
 
-        if ($userInfo) {
-            echo "<p>Tên đăng nhập: " . htmlspecialchars($userInfo['username']) . "</p>";
-            echo "<p>Email: " . htmlspecialchars($userInfo['email']) . "</p>";
-            echo "<p>Tên: " . htmlspecialchars($userInfo['name']) . "</p>";
-            echo "<p>Chức vụ: " . htmlspecialchars($userInfo['position']) . "</p>";
-        } else {
-            echo "<p>Không tìm thấy thông tin người dùng.</p>";
-        }
+            <div class="user-info">
+                <img src="https://photo.znews.vn/w1200/Uploaded/mdf_eioxrd/2021_07_06/1q.jpg" alt="Avatar" class="avatar">
+                <div class="user-details">
+                    <span><?php echo htmlspecialchars($_SESSION['user']); ?></span>
+                    <span class="role">Student</span>
+                </div>
+                <div class="user-dropdown">
+                    <a href="profile.php"><i class="fas fa-user"></i> Hồ sơ</a>
+                    <a href="#"><i class="fas fa-cog"></i> Cài đặt</a>
+                    <a href="../../login.php?logout=true"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                </div>
+            </div>
+        </header>
 
-        $conn->close();
-        ?>
-        <a href="../../login.php?logout=true">Đăng xuất</a>
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="../../index.php"><i class="fas fa-tachometer-alt"></i> Trang chủ</a></li>
+                    <li><a href="../exam/index.php"><i class="fas fa-book"></i> Danh sách đề thi</a></li>
+                    <li><a href="../exam/create.php"><i class="fas fa-stethoscope"></i> Tạo đề thi mới</a></li>
+                    <li><a href="profile.php"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
+                    <li><a href="update_password.php"><i class="fas fa-key"></i> Cập nhật mật khẩu</a></li>
+                    <li><a href="../../login.php?logout=true"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <section>
+                <h2 class="section-title">Thông tin cá nhân</h2>
+                <?php
+                require '../../config/db.php';
+                require '../../controllers/UserController.php';
+
+                $username = $_SESSION['user'];
+                $userController = new UserController($conn);
+                $userInfo = $userController->getUserInfo($username);
+
+                if ($userInfo) {
+                    echo "<p>Tên đăng nhập: " . htmlspecialchars($userInfo['username']) . "</p>";
+                    echo "<p>Email: " . htmlspecialchars($userInfo['email']) . "</p>";
+                    echo "<p>Tên: " . htmlspecialchars($userInfo['name']) . "</p>";
+                    echo "<p>Chức vụ: " . htmlspecialchars($userInfo['position']) . "</p>";
+                } else {
+                    echo "<p>Không tìm thấy thông tin người dùng.</p>";
+                }
+
+                $conn->close();
+                ?>
+                <a href="../../login.php?logout=true">Đăng xuất</a>
+            </section>
+        </main>
     </div>
 </body>
 </html>
